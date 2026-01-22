@@ -2,16 +2,20 @@ package com.example.piticocoin.home
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
@@ -25,6 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ModifierLocalBeyondBoundsLayout
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
@@ -37,12 +42,15 @@ import com.example.piticocoin.R
 
 @Composable
 fun HomeScreen() {
+
+    val keys = listOf("1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "0", "C")
+
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        verticalArrangement = Arrangement.SpaceAround
     ) {
-        Spacer(modifier = Modifier.height(20.dp))
         Text(
             modifier = Modifier.fillMaxWidth(),
             text = "PitiCoin",
@@ -56,8 +64,6 @@ fun HomeScreen() {
                 .fillMaxWidth()
         ) {
             val (topCard, bottomCard, swapButton) = createRefs()
-
-            // 🔼 Card de cima
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -82,8 +88,6 @@ fun HomeScreen() {
                     Text(text = "10.00", fontSize = 40.sp)
                 }
             }
-
-            // 🔽 Card de baixo
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -108,8 +112,6 @@ fun HomeScreen() {
                     )
                 }
             }
-
-            // 🔄 Botão flutuante
             Box(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
@@ -127,9 +129,26 @@ fun HomeScreen() {
                     modifier = Modifier.size(24.dp)
                 )
             }
-        }
-    }
 
+        }
+        LazyVerticalGrid(
+            modifier = Modifier
+                .padding(horizontal = 35.dp),
+            columns = GridCells.Fixed(3)
+        ) {
+            items(keys.size) { indice ->
+                KeyboardButton(
+                    modifier = Modifier
+                        .aspectRatio(1f),
+                    key = keys[indice],
+                    backgroundColor = if (keys[indice] == "C") MaterialTheme.colorScheme.primary
+                    else MaterialTheme.colorScheme.tertiary,
+                    onClick = {}
+                )
+            }
+        }
+
+    }
 }
 
 @Composable
@@ -152,5 +171,24 @@ fun CurrencyRow(
         }
         Spacer(modifier = Modifier.weight(1f))
         Text(text = currencyName, fontSize = 14.sp, fontWeight = FontWeight.Bold)
+    }
+}
+
+@Composable
+fun KeyboardButton(
+    modifier: Modifier = Modifier,
+    key: String,
+    backgroundColor: Color,
+    onClick: (String) -> Unit
+) {
+    Box(
+        modifier = modifier
+            .padding(8.dp)
+            .clip(CircleShape)
+            .background(color = backgroundColor)
+            .clickable { onClick(key) },
+        contentAlignment = Alignment.Center
+    ){
+        Text(text = key, fontSize = 32.sp)
     }
 }
