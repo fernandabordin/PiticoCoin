@@ -25,6 +25,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Modifier
@@ -38,12 +39,18 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.piticocoin.R
+import com.example.piticocoin.home.viewmodel.HomeViewModel
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(viewModel: HomeViewModel = viewModel()) {
 
     val keys = listOf("1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "0", "C")
+
+    LaunchedEffect(Unit) {
+        viewModel.fetchRates()
+    }
 
     Column(
         modifier = Modifier
@@ -85,7 +92,7 @@ fun HomeScreen() {
                         currencyName = "PiticoCoin",
                         onDropDownIconclicked = {}
                     )
-                    Text(text = "10.00", fontSize = 40.sp)
+                    Text(text = viewModel.eurRate.toString(), fontSize = 40.sp)
                 }
             }
             Card(
@@ -103,7 +110,7 @@ fun HomeScreen() {
                         .padding(horizontal = 12.dp, vertical = 4.dp),
                     horizontalAlignment = Alignment.End
                 ) {
-                    Text(text = "2.00", fontSize = 40.sp)
+                    Text(text = viewModel.brlRate.toString(), fontSize = 40.sp)
                     CurrencyRow(
                         modifier = Modifier.fillMaxWidth(),
                         currencyCode = "BRL",
