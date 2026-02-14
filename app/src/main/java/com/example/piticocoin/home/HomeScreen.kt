@@ -74,6 +74,7 @@ fun HomeScreen(viewModel: HomeViewModel = viewModel()) {
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .clickable { viewModel.selectTop() }
                     .constrainAs(topCard) {
                         top.linkTo(parent.top)
                         start.linkTo(parent.start)
@@ -92,12 +93,16 @@ fun HomeScreen(viewModel: HomeViewModel = viewModel()) {
                         currencyName = "PiticoCoin",
                         onDropDownIconclicked = {}
                     )
-                    Text(text = viewModel.eurRate.toString(), fontSize = 40.sp)
+                    Text(
+                        text = if (viewModel.eurRate.isBlank()) "0" else viewModel.eurRate,
+                        fontSize = 40.sp
+                    )
                 }
             }
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .clickable { viewModel.selectBottom() }
                     .constrainAs(bottomCard) {
                         top.linkTo(topCard.bottom, margin = 40.dp)
                         start.linkTo(parent.start)
@@ -110,7 +115,10 @@ fun HomeScreen(viewModel: HomeViewModel = viewModel()) {
                         .padding(horizontal = 12.dp, vertical = 4.dp),
                     horizontalAlignment = Alignment.End
                 ) {
-                    Text(text = viewModel.brlRate.toString(), fontSize = 40.sp)
+                    Text(
+                        text = if (viewModel.brlRate.isBlank()) "0" else viewModel.brlRate,
+                        fontSize = 40.sp
+                    )
                     CurrencyRow(
                         modifier = Modifier.fillMaxWidth(),
                         currencyCode = "BRL",
@@ -150,7 +158,9 @@ fun HomeScreen(viewModel: HomeViewModel = viewModel()) {
                     key = keys[indice],
                     backgroundColor = if (keys[indice] == "C") MaterialTheme.colorScheme.primary
                     else MaterialTheme.colorScheme.tertiary,
-                    onClick = {}
+                    onClick = { key ->
+                        viewModel.onKeyPressed(key)
+                    }
                 )
             }
         }
