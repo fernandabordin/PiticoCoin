@@ -10,10 +10,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.CircleShape
@@ -27,11 +25,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ModifierLocalBeyondBoundsLayout
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -94,7 +90,7 @@ fun HomeScreen(viewModel: HomeViewModel = viewModel()) {
                         onDropDownIconclicked = {}
                     )
                     Text(
-                        text = if (viewModel.eurRate.isBlank()) "0" else viewModel.eurRate,
+                        text = viewModel.eurValue.ifEmpty{ "" },
                         fontSize = 40.sp
                     )
                 }
@@ -116,7 +112,7 @@ fun HomeScreen(viewModel: HomeViewModel = viewModel()) {
                     horizontalAlignment = Alignment.End
                 ) {
                     Text(
-                        text = if (viewModel.brlRate.isBlank()) "0" else viewModel.brlRate,
+                        text = viewModel.brlValue.ifEmpty { "" },
                         fontSize = 40.sp
                     )
                     CurrencyRow(

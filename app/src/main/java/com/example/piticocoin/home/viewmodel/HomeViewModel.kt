@@ -19,7 +19,9 @@ class HomeViewModel : ViewModel() {
     var eurRate by mutableStateOf("")
         private set
 
-    var brlRate: String by mutableStateOf(0.0)
+    var eurValue by mutableStateOf("")
+
+    var brlValue by mutableStateOf("")
         private set
 
     private var selectedField = SelectedField.BOTTOM
@@ -33,8 +35,8 @@ class HomeViewModel : ViewModel() {
                 )
 
                 if (response.success) {
-                    val eur = (response.rates["EUR"]as? Double) ?: 0.0
-                    eurRate = String.format("%.4f", eur)
+                    val eur = response.rates["EUR"] ?: 0.0
+                    eurValue = eur.toString()
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -60,18 +62,29 @@ class HomeViewModel : ViewModel() {
     private fun appendKey(key: String) {
         when (selectedField) {
             SelectedField.BOTTOM -> {
-                brlRate += key
+                brlValue = buildInput(brlValue, key)
                 convertBrlToEur()
             }
             SelectedField.TOP -> {
-                eurRate += key
+                eurValue = buildInput(eurValue, key)
                 convertEurToBrl()
             }
         }
     }
 
+    private fun buildInput(current: String, key: String): String {
+        return when {
+            key == "." && current.contains(".") -> current
+            key == "." && current.isEmpty() -> "0."
+            current == "0" && key != "." -> key
+            else -> current + key
+        }
+    }
+
     private fun clear() {
-        when (selectedField) {
+        brlValue = ""
+        eurValue = ""
+        /*when (selectedField) {
             SelectedField.BOTTOM -> {
                 brlRate = ""
                 eurRate = ""
@@ -80,21 +93,22 @@ class HomeViewModel : ViewModel() {
                 eurRate = ""
                 brlRate = ""
             }
-        }
+        }*/
     }
 
     private fun convertBrlToEur() {
-        val Brl = brlRate.toDoubleOrNull() ?: return
-        val rate = eurRate.toDoubleOrNull() ?: return
+        val brl = brlValue.toDoubleOrNull() ?: return
+        val rate = eurValue.toDoubleOrNull() ?: return
 
-        val Eur = Brl / rate
-        eurRate = String.format("%.2f", Eur)
+        val eur = brl / rate
+        eurValue = String.format("%.2f", eur)
     }
 
     private fun convertEurToBrl() {
-        val eur = eurRate.toDoubleOrNull() ?: return
+        val eur = eurValue.toDoubleOrNull() ?: return
+        val rate = eurRate.toDoubleOrNull() ?: return
 
-        val Brl = eur * eurRate
-        brlRate = String.format("%.2f", Brl)
+        val brl = eur * rate
+        brlValue = String.format("%.2f", brl)
     }
 }
